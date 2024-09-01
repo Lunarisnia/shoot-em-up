@@ -38,9 +38,10 @@ func (b *Bullet) OnStart() {
 }
 
 func (b *Bullet) OnUpdate(r *sdl.Renderer) {
-	graphics.Blit(r, b.Texture, b.Position, 1.0)
-
-	b.Position = b.Position.Add(b.direction.MultiplyScalar(b.Speed))
+	if b.Position.X < core.ScreenWidth {
+		graphics.Blit(r, b.Texture, b.Position, 1.0)
+		b.Position = b.Position.Add(b.direction.MultiplyScalar(b.Speed))
+	}
 }
 
 func (b *Bullet) OnKeyDown(key *sdl.KeyboardEvent) {
