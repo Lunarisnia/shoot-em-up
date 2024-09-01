@@ -5,6 +5,7 @@ type Vector2i struct {
 	Y int32
 }
 
+// TODO: Add Normalize method
 func (v Vector2i) Subtract(y Vector2i) Vector2i {
 	return Vector2i{
 		X: v.X - y.X,
