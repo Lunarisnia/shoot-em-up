@@ -91,8 +91,12 @@ func (p *Player) spawnBullet(r *sdl.Renderer) {
 	if err != nil {
 		panic(err)
 	}
+	_, _, bulletWidth, bulletHeight, err := bulletSprite.Query()
+	if err != nil {
+		panic(err)
+	}
 	NewBullet(p.app, dsu.Vector2i{
-		X: p.Position.X + (width*int32(p.scale) + 30),
-		Y: p.Position.Y + (height * int32(p.scale) / 2),
+		X: p.Position.X + (width*int32(p.scale) + 30) - bulletWidth/2,
+		Y: p.Position.Y + (height * int32(p.scale) / 2) - bulletHeight/2,
 	}, bulletSprite, 10.0, dsu.Vector2i{X: 1, Y: 0})
 }
