@@ -16,7 +16,6 @@ type App struct {
 
 	MainHooks          []*dsu.Node
 	KeyboardInputHooks []*dsu.NodeInput
-	RenderHooks        []*dsu.NodeRender
 }
 
 func (a *App) InitSDL() {
@@ -50,14 +49,11 @@ func (a *App) RegisterNode(e interface{}) {
 	if ev, ok := e.(dsu.NodeInput); ok {
 		a.KeyboardInputHooks = append(a.KeyboardInputHooks, &ev)
 	}
-	if ev, ok := e.(dsu.NodeRender); ok {
-		a.RenderHooks = append(a.RenderHooks, &ev)
-	}
 }
 
-func (a *App) Updates() {
+func (a *App) Updates(r *sdl.Renderer) {
 	for _, event := range a.MainHooks {
-		(*event).OnUpdate()
+		(*event).OnUpdate(r)
 	}
 }
 
@@ -74,11 +70,5 @@ func (a *App) KeyboardInputs(key *sdl.KeyboardEvent) {
 		} else {
 			(*event).OnKeyUp(key)
 		}
-	}
-}
-
-func (a *App) Renders(r *sdl.Renderer) {
-	for _, event := range a.RenderHooks {
-		(*event).OnRender(r)
 	}
 }

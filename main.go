@@ -21,8 +21,8 @@ func initNodes(a *core.App) {
 
 	actors.NewPlayer(a,
 		dsu.Vector2i{
-			X: core.ScreenWidth/2 - width*10.0/2,
-			Y: core.ScreenHeight/2 - height*10.0/2,
+			X: core.ScreenWidth/2 - width*2/2,
+			Y: core.ScreenHeight/2 - height*2/2,
 		},
 		playerSprite,
 	)
@@ -43,15 +43,13 @@ func main() {
 	for running {
 		graphics.PrepareScene(app.Renderer)
 
-		app.Renders(app.Renderer)
-
 		inputs.HandleInput(func() {
 			running = false
 		}, func(key *sdl.KeyboardEvent) {
 			app.KeyboardInputs(key)
 		})
 
-		app.Updates()
+		app.Updates(app.Renderer)
 
 		graphics.PresentScene(app.Renderer)
 
