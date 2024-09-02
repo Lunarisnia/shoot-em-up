@@ -17,6 +17,7 @@ func NewBullet(
 	bullet := Bullet{
 		Position:  position,
 		Texture:   texture,
+		Health:    1,
 		Speed:     speed,
 		direction: direction,
 	}
@@ -29,6 +30,7 @@ type Bullet struct {
 	Position dsu.Vector2i
 	Texture  *sdl.Texture
 	Speed    int32
+	Health   int
 
 	app       *core.App
 	direction dsu.Vector2i

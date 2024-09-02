@@ -39,6 +39,9 @@ func main() {
 
 	app.Starts()
 
+	tick := float64(sdl.GetTicks64())
+	remainder := float64(0.0)
+
 	running := true
 	for running {
 		graphics.PrepareScene(app.Renderer)
@@ -53,6 +56,29 @@ func main() {
 
 		graphics.PresentScene(app.Renderer)
 
-		sdl.Delay(16)
+		capFramerate(&tick, &remainder)
 	}
+}
+
+func capFramerate(previousTick *float64, remainder *float64) {
+	var wait float64
+	var latestTick float64
+
+	wait = 16 + *remainder
+
+	*remainder -= *remainder
+
+	latestTick = float64(sdl.GetTicks64()) - *previousTick
+
+	wait -= latestTick
+
+	if wait < 1.0 {
+		wait = 1.0
+	}
+
+	sdl.Delay(uint32(wait))
+
+	*remainder += 0.667
+
+	*previousTick = float64(sdl.GetTicks64())
 }
