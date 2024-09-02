@@ -39,7 +39,10 @@ type Bullet struct {
 func (b *Bullet) OnStart() {
 }
 
-func (b *Bullet) OnUpdate(r *sdl.Renderer) {
+func (b *Bullet) OnUpdate() {
+}
+
+func (b *Bullet) OnRender(r *sdl.Renderer) {
 	if b.Position.X < core.ScreenWidth {
 		graphics.Blit(r, b.Texture, b.Position, 1.0)
 		b.Position = b.Position.Add(b.direction.MultiplyScalar(b.Speed))

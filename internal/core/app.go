@@ -51,9 +51,15 @@ func (a *App) RegisterNode(e interface{}) {
 	}
 }
 
-func (a *App) Updates(r *sdl.Renderer) {
+func (a *App) Updates() {
 	for _, event := range a.MainHooks {
-		(*event).OnUpdate(r)
+		(*event).OnUpdate()
+	}
+}
+
+func (a *App) Renders(r *sdl.Renderer) {
+	for _, event := range a.MainHooks {
+		(*event).OnRender(r)
 	}
 }
 

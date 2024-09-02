@@ -6,7 +6,8 @@ import (
 
 type Node interface {
 	OnStart()
-	OnUpdate(r *sdl.Renderer)
+	OnUpdate()
+	OnRender(r *sdl.Renderer)
 }
 
 type NodeInput interface {

@@ -46,13 +46,15 @@ func main() {
 	for running {
 		graphics.PrepareScene(app.Renderer)
 
+		app.Renders(app.Renderer)
+
 		inputs.HandleInput(func() {
 			running = false
 		}, func(key *sdl.KeyboardEvent) {
 			app.KeyboardInputs(key)
 		})
 
-		app.Updates(app.Renderer)
+		app.Updates()
 
 		graphics.PresentScene(app.Renderer)
 
