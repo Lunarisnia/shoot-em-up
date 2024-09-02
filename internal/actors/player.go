@@ -147,7 +147,7 @@ func (p *Player) spawnBullet() {
 		X: p.Position.X,
 		Y: p.Position.Y,
 	}
-	scatter := int32(rand.Intn(30+30) - 30)
+	scatter := int32(rand.Intn(60+60) - 60)
 	bulletOffset := dsu.Vector2i{
 		X: (width*int32(p.scale) + 30) - bulletWidth/2,
 		Y: (height * int32(p.scale) / 2) - bulletHeight/2 + scatter,
