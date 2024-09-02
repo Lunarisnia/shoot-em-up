@@ -2,6 +2,7 @@ package actors
 
 import (
 	"fmt"
+	"math/rand"
 
 	"Lunarisnia/sdl-pong/internal/core"
 	"Lunarisnia/sdl-pong/internal/dsu"
@@ -45,7 +46,8 @@ type Player struct {
 	scale         float32
 	bulletTexture *sdl.Texture
 	firing        bool
-	reloadSpeed   int
+	reload        int
+	fireCount     int
 }
 
 func (p *Player) OnStart() {
@@ -65,12 +67,20 @@ func (p *Player) OnUpdate() {
 		p.Position = newPos
 	}
 
-	if p.firing {
+	if p.reload > 0 {
+		p.reload--
+		p.fireCount = 0
+	}
+
+	if p.firing && p.reload <= 0 {
 		p.spawnBullet()
+		p.fireCount++
+		if p.fireCount >= 2 {
+			p.reload = 8
+		}
 	}
 
 	if p.movementInput.Up == 1 {
-		fmt.Println("MovementInput: ", p.movementInput)
 		p.direction.Y = -1
 	} else if p.movementInput.Down == 1 {
 		p.direction.Y = 1
@@ -137,9 +147,10 @@ func (p *Player) spawnBullet() {
 		X: p.Position.X,
 		Y: p.Position.Y,
 	}
+	scatter := int32(rand.Intn(30+30) - 30)
 	bulletOffset := dsu.Vector2i{
 		X: (width*int32(p.scale) + 30) - bulletWidth/2,
-		Y: (height * int32(p.scale) / 2) - bulletHeight/2,
+		Y: (height * int32(p.scale) / 2) - bulletHeight/2 + scatter,
 	}
 
 	bulletSpawnPosition = bulletSpawnPosition.Add(bulletOffset)
