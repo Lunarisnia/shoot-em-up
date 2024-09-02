@@ -7,11 +7,12 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func NewEnemy(a *core.App, position dsu.Vector2i, texture *sdl.Texture) *Enemy {
-	bulletTexture, err := graphics.LoadTexture(a.Renderer, "assets/bullet.png")
-	if err != nil {
-		panic(err)
-	}
+func NewEnemy(
+	a *core.App,
+	position dsu.Vector2i,
+	texture *sdl.Texture,
+	bulletTexture *sdl.Texture,
+) *Enemy {
 	enemy := Enemy{
 		app:           a,
 		Position:      position,
@@ -39,6 +40,7 @@ func (e *Enemy) OnStart() {
 }
 
 func (e *Enemy) OnUpdate() {
+	e.Position.X -= 1
 }
 
 func (e *Enemy) OnRender(r *sdl.Renderer) {

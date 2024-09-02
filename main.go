@@ -26,6 +26,8 @@ func initNodes(a *core.App) {
 		},
 		playerSprite,
 	)
+
+	actors.NewEnemySpawner(a, 30, playerSprite)
 }
 
 func main() {
@@ -42,7 +44,6 @@ func main() {
 	tick := float64(sdl.GetTicks64())
 	remainder := float64(0.0)
 
-	// TODO: Create an enemy spawner
 	running := true
 	for running {
 		graphics.PrepareScene(app.Renderer)
