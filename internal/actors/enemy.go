@@ -1,6 +1,8 @@
 package actors
 
 import (
+	"math/rand"
+
 	"Lunarisnia/sdl-pong/internal/core"
 	"Lunarisnia/sdl-pong/internal/dsu"
 	"Lunarisnia/sdl-pong/internal/graphics"
@@ -22,6 +24,7 @@ func NewEnemy(
 		bulletTexture: bulletTexture,
 	}
 	a.RegisterNode(&enemy)
+	enemy.OnStart()
 	return &enemy
 }
 
@@ -37,10 +40,20 @@ type Enemy struct {
 }
 
 func (e *Enemy) OnStart() {
+	e.direction.X = -1
+	e.direction.Y = int32(rand.Intn(3) - 1)
 }
 
 func (e *Enemy) OnUpdate() {
-	e.Position.X -= 1
+	_, _, _, height, err := e.Texture.Query()
+	if err != nil {
+		panic(err)
+	}
+	newPosition := e.Position.Add(e.direction.MultiplyScalar(5))
+	if newPosition.Y < 0 || newPosition.Y > (core.ScreenHeight-height*2) {
+		e.direction.Y *= -1
+	}
+	e.Position = newPosition
 }
 
 func (e *Enemy) OnRender(r *sdl.Renderer) {

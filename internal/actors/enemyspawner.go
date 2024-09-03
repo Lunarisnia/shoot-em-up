@@ -19,7 +19,6 @@ func NewEnemySpawner(a *core.App, interval int, enemyTexture *sdl.Texture) *Enem
 	return &enemySpawner
 }
 
-// TODO: Finish this
 type EnemySpawner struct {
 	Interval     int
 	EnemyTexture *sdl.Texture
@@ -43,8 +42,9 @@ func (e *EnemySpawner) OnUpdate() {
 		}
 		NewEnemy(e.app, dsu.Vector2i{
 			X: core.ScreenWidth,
-			Y: int32(rand.Intn(int(core.ScreenHeight - height))),
+			Y: int32(rand.Intn(int(core.ScreenHeight - height*2.0))),
 		}, e.EnemyTexture, e.EnemyTexture)
+		e.timer = e.Interval
 		return
 	}
 
