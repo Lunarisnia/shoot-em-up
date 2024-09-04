@@ -1,6 +1,7 @@
 package actors
 
 import (
+	"fmt"
 	"math/rand"
 
 	"Lunarisnia/sdl-pong/internal/core"
@@ -24,6 +25,7 @@ func NewEnemy(
 		bulletTexture: bulletTexture,
 	}
 	a.RegisterNode(&enemy)
+	a.CollisionServer.RegisterNode(&enemy)
 	enemy.OnStart()
 	return &enemy
 }
@@ -58,4 +60,18 @@ func (e *Enemy) OnUpdate() {
 
 func (e *Enemy) OnRender(r *sdl.Renderer) {
 	graphics.Blit(r, e.Texture, e.Position, e.scale)
+}
+
+func (e *Enemy) OnHit(collider any) {
+	// TODO: PROPER HANDLING
+	fmt.Println("HIT BY A BULLET")
+}
+
+func (e *Enemy) GetMetadataForCollision() (int32, int32, int32, int32) {
+	_, _, width, height, err := e.Texture.Query()
+	if err != nil {
+		panic(err)
+	}
+
+	return e.Position.X, e.Position.Y, width, height
 }

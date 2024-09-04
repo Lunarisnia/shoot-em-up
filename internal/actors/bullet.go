@@ -1,6 +1,8 @@
 package actors
 
 import (
+	"fmt"
+
 	"Lunarisnia/sdl-pong/internal/core"
 	"Lunarisnia/sdl-pong/internal/dsu"
 	"Lunarisnia/sdl-pong/internal/graphics"
@@ -22,6 +24,8 @@ func NewBullet(
 		direction: direction,
 	}
 	a.RegisterNode(&bullet)
+	a.CollisionServer.RegisterNode(&bullet)
+	bullet.OnStart()
 
 	return &bullet
 }
@@ -46,6 +50,7 @@ func (b *Bullet) OnRender(r *sdl.Renderer) {
 	if b.Position.X < core.ScreenWidth {
 		graphics.Blit(r, b.Texture, b.Position, 1.0)
 		b.Position = b.Position.Add(b.direction.MultiplyScalar(b.Speed))
+		// TODO: Find out a way to free this memory
 	}
 }
 
@@ -53,4 +58,18 @@ func (b *Bullet) OnKeyDown(key *sdl.KeyboardEvent) {
 }
 
 func (b *Bullet) OnKeyUp(key *sdl.KeyboardEvent) {
+}
+
+func (b *Bullet) OnCollided(collider any) {
+	// TODO: PROPER HANDLING
+	fmt.Println("HIT AN ENEMY")
+}
+
+func (b *Bullet) GetMetadataForCollision() (int32, int32, int32, int32) {
+	_, _, width, height, err := b.Texture.Query()
+	if err != nil {
+		panic(err)
+	}
+
+	return b.Position.X, b.Position.Y, width, height
 }

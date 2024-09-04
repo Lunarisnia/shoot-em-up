@@ -27,7 +27,7 @@ func initNodes(a *core.App) {
 		playerSprite,
 	)
 
-	actors.NewEnemySpawner(a, 30, playerSprite)
+	actors.NewEnemySpawner(a, 260, playerSprite)
 }
 
 func main() {
@@ -56,6 +56,7 @@ func main() {
 			app.KeyboardInputs(key)
 		})
 
+		app.CollisionServer.Scan()
 		app.Updates()
 
 		graphics.PresentScene(app.Renderer)

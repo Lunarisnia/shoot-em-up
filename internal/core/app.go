@@ -11,8 +11,9 @@ const (
 )
 
 type App struct {
-	Window   *sdl.Window
-	Renderer *sdl.Renderer
+	Window          *sdl.Window
+	Renderer        *sdl.Renderer
+	CollisionServer *CollisionServer
 
 	MainHooks          []*dsu.Node
 	KeyboardInputHooks []*dsu.NodeInput
@@ -40,6 +41,8 @@ func (a *App) InitSDL() {
 	if err != nil {
 		panic(err)
 	}
+
+	a.CollisionServer = NewCollisionServer()
 }
 
 func (a *App) RegisterNode(e interface{}) {
