@@ -1,8 +1,6 @@
 package actors
 
 import (
-	"fmt"
-
 	"Lunarisnia/sdl-pong/internal/core"
 	"Lunarisnia/sdl-pong/internal/dsu"
 	"Lunarisnia/sdl-pong/internal/graphics"
@@ -22,6 +20,7 @@ func NewBullet(
 		Health:    1,
 		Speed:     speed,
 		direction: direction,
+		app:       a,
 	}
 	a.RegisterNode(&bullet)
 	a.CollisionServer.RegisterNode(&bullet)
@@ -51,6 +50,8 @@ func (b *Bullet) OnRender(r *sdl.Renderer) {
 		graphics.Blit(r, b.Texture, b.Position, 1.0)
 		b.Position = b.Position.Add(b.direction.MultiplyScalar(b.Speed))
 		// TODO: Find out a way to free this memory
+	} else {
+		b.Free()
 	}
 }
 
@@ -62,7 +63,7 @@ func (b *Bullet) OnKeyUp(key *sdl.KeyboardEvent) {
 
 func (b *Bullet) OnCollided(collider any) {
 	// TODO: PROPER HANDLING
-	fmt.Println("HIT AN ENEMY")
+	b.Free()
 }
 
 func (b *Bullet) GetMetadataForCollision() (int32, int32, int32, int32) {
@@ -72,4 +73,26 @@ func (b *Bullet) GetMetadataForCollision() (int32, int32, int32, int32) {
 	}
 
 	return b.Position.X, b.Position.Y, width, height
+}
+
+func (b *Bullet) Free() {
+	for i, e := range b.app.MainHooks {
+		if *e == b {
+			b.app.MainHooks[i] = b.app.MainHooks[len(b.app.MainHooks)-1]
+			b.app.MainHooks = b.app.MainHooks[:len(b.app.MainHooks)-1]
+			break
+		}
+	}
+	for i, e := range b.app.KeyboardInputHooks {
+		if *e == b {
+			b.app.KeyboardInputHooks[i] = b.app.KeyboardInputHooks[len(b.app.KeyboardInputHooks)-1]
+			b.app.KeyboardInputHooks = b.app.KeyboardInputHooks[:len(b.app.KeyboardInputHooks)-1]
+		}
+	}
+	for i, e := range b.app.CollisionServer.Colliders {
+		if *e == b {
+			b.app.CollisionServer.Colliders[i] = b.app.CollisionServer.Colliders[len(b.app.CollisionServer.Colliders)-1]
+			b.app.CollisionServer.Colliders = b.app.CollisionServer.Colliders[:len(b.app.CollisionServer.Colliders)-1]
+		}
+	}
 }

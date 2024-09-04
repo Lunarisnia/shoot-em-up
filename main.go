@@ -27,7 +27,11 @@ func initNodes(a *core.App) {
 		playerSprite,
 	)
 
-	actors.NewEnemySpawner(a, 260, playerSprite)
+	// actors.NewEnemySpawner(a, 260, playerSprite)
+	actors.NewEnemy(a, dsu.Vector2i{
+		X: core.ScreenWidth - 100,
+		Y: core.ScreenHeight / 2,
+	}, playerSprite, playerSprite)
 }
 
 func main() {

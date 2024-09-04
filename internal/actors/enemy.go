@@ -2,7 +2,6 @@ package actors
 
 import (
 	"fmt"
-	"math/rand"
 
 	"Lunarisnia/sdl-pong/internal/core"
 	"Lunarisnia/sdl-pong/internal/dsu"
@@ -34,6 +33,7 @@ type Enemy struct {
 	Position dsu.Vector2i
 	Texture  *sdl.Texture
 	Speed    int32
+	Index    int
 
 	app           *core.App
 	direction     dsu.Vector2i
@@ -42,8 +42,8 @@ type Enemy struct {
 }
 
 func (e *Enemy) OnStart() {
-	e.direction.X = -1
-	e.direction.Y = int32(rand.Intn(3) - 1)
+	// e.direction.X = -1
+	// e.direction.Y = int32(rand.Intn(3) - 1)
 }
 
 func (e *Enemy) OnUpdate() {
@@ -73,5 +73,5 @@ func (e *Enemy) GetMetadataForCollision() (int32, int32, int32, int32) {
 		panic(err)
 	}
 
-	return e.Position.X, e.Position.Y, width, height
+	return e.Position.X, e.Position.Y, width * 2, height * 2
 }

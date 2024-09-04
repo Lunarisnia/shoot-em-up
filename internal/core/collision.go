@@ -23,16 +23,16 @@ func NewCollisionServer() *CollisionServer {
 
 // NOTE: This worked!
 type CollisionServer struct {
-	collisionAreas []*CollisionArea
-	colliders      []*Collider
+	CollisionAreas []*CollisionArea
+	Colliders      []*Collider
 }
 
 func (c *CollisionServer) RegisterNode(node any) {
 	if collisionArea, ok := node.(CollisionArea); ok {
-		c.collisionAreas = append(c.collisionAreas, &collisionArea)
+		c.CollisionAreas = append(c.CollisionAreas, &collisionArea)
 	}
 	if collider, ok := node.(Collider); ok {
-		c.colliders = append(c.colliders, &collider)
+		c.Colliders = append(c.Colliders, &collider)
 	}
 }
 
@@ -41,10 +41,10 @@ func (c *CollisionServer) checkCollision(x1, y1, w1, h1, x2, y2, w2, h2 int32) b
 }
 
 func (c *CollisionServer) Scan() {
-	for _, collider := range c.colliders {
+	for _, collider := range c.Colliders {
 		x1, y1, w1, h1 := (*collider).GetMetadataForCollision()
 
-		for _, collisionArea := range c.collisionAreas {
+		for _, collisionArea := range c.CollisionAreas {
 			x2, y2, w2, h2 := (*collisionArea).GetMetadataForCollision()
 
 			if c.checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
