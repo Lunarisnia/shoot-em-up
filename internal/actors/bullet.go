@@ -55,7 +55,6 @@ func (b *Bullet) OnRender(r *sdl.Renderer) {
 	if b.Position.X < core.ScreenWidth {
 		graphics.Blit(r, b.Texture, b.Position, 1.0)
 		b.Position = b.Position.Add(b.direction.MultiplyScalar(b.Speed))
-		// TODO: Find out a way to free this memory
 	} else {
 		b.Free()
 	}
@@ -68,7 +67,6 @@ func (b *Bullet) OnKeyUp(key *sdl.KeyboardEvent) {
 }
 
 func (b *Bullet) OnCollided(area *core.CollisionArea) {
-	// TODO: PROPER HANDLING
 	b.Free()
 }
 
