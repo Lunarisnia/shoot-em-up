@@ -26,7 +26,6 @@ func initNodes(a *core.App) {
 		},
 		playerSprite, 0, 2,
 	)
-	// Hey there
 
 	actors.NewEnemySpawner(a, 180, playerSprite)
 }
