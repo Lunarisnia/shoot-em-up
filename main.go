@@ -24,7 +24,7 @@ func initNodes(a *core.App) {
 			X: core.ScreenWidth/2 - width*2/2,
 			Y: core.ScreenHeight/2 - height*2/2,
 		},
-		playerSprite,
+		playerSprite, 0, 2,
 	)
 
 	actors.NewEnemySpawner(a, 180, playerSprite)

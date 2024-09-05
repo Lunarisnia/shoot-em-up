@@ -10,12 +10,20 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func NewPlayer(a *core.App, position dsu.Vector2i, texture *sdl.Texture) *Player {
+func NewPlayer(
+	a *core.App,
+	position dsu.Vector2i,
+	texture *sdl.Texture,
+	layer int,
+	targetLayer int,
+) *Player {
 	bulletTexture, err := graphics.LoadTexture(a.Renderer, "assets/bullet.png")
 	if err != nil {
 		panic(err)
 	}
 	player := Player{
+		Layer:         layer,
+		TargetLayer:   targetLayer,
 		app:           a,
 		Position:      position,
 		Texture:       texture,
@@ -24,6 +32,7 @@ func NewPlayer(a *core.App, position dsu.Vector2i, texture *sdl.Texture) *Player
 		bulletTexture: bulletTexture,
 	}
 	a.RegisterNode(&player)
+	a.CollisionServer.RegisterNode(&player)
 
 	return &player
 }
@@ -36,9 +45,11 @@ type movementInput struct {
 }
 
 type Player struct {
-	Position dsu.Vector2i
-	Texture  *sdl.Texture
-	Speed    int32
+	Position    dsu.Vector2i
+	Texture     *sdl.Texture
+	Speed       int32
+	Layer       int
+	TargetLayer int
 
 	movementInput movementInput
 	direction     dsu.Vector2i
@@ -134,6 +145,34 @@ func (p *Player) OnKeyUp(key *sdl.KeyboardEvent) {
 	}
 }
 
+func (p *Player) OnCollided(area *core.CollisionArea) {
+	if (*area).GetTag() == "enemy" {
+		fmt.Println("Took 1 Damage")
+		return
+	}
+}
+
+func (p *Player) GetMetadataForCollision() (int32, int32, int32, int32) {
+	_, _, width, height, err := p.Texture.Query()
+	if err != nil {
+		panic(err)
+	}
+
+	return p.Position.X, p.Position.Y, width * int32(p.scale), height * int32(p.scale)
+}
+
+func (p *Player) GetLayer() int {
+	return p.Layer
+}
+
+func (p *Player) GetTargetLayer() int {
+	return p.TargetLayer
+}
+
+func (p *Player) GetTag() string {
+	return "player"
+}
+
 func (p *Player) spawnBullet() {
 	_, _, width, height, err := p.Texture.Query()
 	if err != nil {
@@ -154,5 +193,5 @@ func (p *Player) spawnBullet() {
 	}
 
 	bulletSpawnPosition = bulletSpawnPosition.Add(bulletOffset)
-	NewBullet(p.app, bulletSpawnPosition, p.bulletTexture, 10.0, dsu.Vector2i{X: 1, Y: 0})
+	NewBullet(p.app, bulletSpawnPosition, p.bulletTexture, 10.0, dsu.Vector2i{X: 1, Y: 0}, 1, 2)
 }

@@ -1,18 +1,21 @@
 package core
 
 type CollisionArea interface {
-	OnHit(collider any)
+	OnHit(collider *Collider)
 	Collision
 }
 
 type Collider interface {
-	OnCollided(collider any)
+	OnCollided(area *CollisionArea)
 	Collision
 }
 
 type Collision interface {
 	// GetMetadataForCollision should return the entity x, y, width, height
 	GetMetadataForCollision() (int32, int32, int32, int32)
+	GetLayer() int
+	GetTargetLayer() int
+	GetTag() string
 }
 
 func NewCollisionServer() *CollisionServer {
@@ -47,7 +50,8 @@ func (c *CollisionServer) Scan() {
 		for _, collisionArea := range c.CollisionAreas {
 			x2, y2, w2, h2 := (*collisionArea).GetMetadataForCollision()
 
-			if c.checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
+			if (*collider).GetTargetLayer() == (*collisionArea).GetLayer() &&
+				c.checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
 				(*collider).OnCollided(collisionArea)
 				(*collisionArea).OnHit(collider)
 			}

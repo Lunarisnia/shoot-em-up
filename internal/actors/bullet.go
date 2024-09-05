@@ -13,14 +13,18 @@ func NewBullet(
 	texture *sdl.Texture,
 	speed int32,
 	direction dsu.Vector2i,
+	layer int,
+	targetLayer int,
 ) *Bullet {
 	bullet := Bullet{
-		Position:  position,
-		Texture:   texture,
-		Health:    1,
-		Speed:     speed,
-		direction: direction,
-		app:       a,
+		Layer:       layer,
+		TargetLayer: targetLayer,
+		Position:    position,
+		Texture:     texture,
+		Health:      1,
+		Speed:       speed,
+		direction:   direction,
+		app:         a,
 	}
 	a.RegisterNode(&bullet)
 	a.CollisionServer.RegisterNode(&bullet)
@@ -30,10 +34,12 @@ func NewBullet(
 }
 
 type Bullet struct {
-	Position dsu.Vector2i
-	Texture  *sdl.Texture
-	Speed    int32
-	Health   int
+	Position    dsu.Vector2i
+	Texture     *sdl.Texture
+	Speed       int32
+	Health      int
+	Layer       int
+	TargetLayer int
 
 	app       *core.App
 	direction dsu.Vector2i
@@ -61,7 +67,7 @@ func (b *Bullet) OnKeyDown(key *sdl.KeyboardEvent) {
 func (b *Bullet) OnKeyUp(key *sdl.KeyboardEvent) {
 }
 
-func (b *Bullet) OnCollided(collider any) {
+func (b *Bullet) OnCollided(area *core.CollisionArea) {
 	// TODO: PROPER HANDLING
 	b.Free()
 }
@@ -73,6 +79,18 @@ func (b *Bullet) GetMetadataForCollision() (int32, int32, int32, int32) {
 	}
 
 	return b.Position.X, b.Position.Y, width, height
+}
+
+func (b *Bullet) GetLayer() int {
+	return b.Layer
+}
+
+func (b *Bullet) GetTargetLayer() int {
+	return b.TargetLayer
+}
+
+func (b *Bullet) GetTag() string {
+	return "bullet"
 }
 
 func (b *Bullet) Free() {

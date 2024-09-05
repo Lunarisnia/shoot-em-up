@@ -43,7 +43,7 @@ func (e *EnemySpawner) OnUpdate() {
 		NewEnemy(e.app, dsu.Vector2i{
 			X: core.ScreenWidth,
 			Y: int32(rand.Intn(int(core.ScreenHeight - height*2.0))),
-		}, e.EnemyTexture, e.EnemyTexture, 5)
+		}, e.EnemyTexture, e.EnemyTexture, 5, 2, 0)
 		e.timer = e.Interval
 		return
 	}

@@ -15,8 +15,12 @@ func NewEnemy(
 	texture *sdl.Texture,
 	bulletTexture *sdl.Texture,
 	health int,
+	layer int,
+	targetLayer int,
 ) *Enemy {
 	enemy := Enemy{
+		Layer:         layer,
+		TargetLayer:   targetLayer,
 		app:           a,
 		Position:      position,
 		Texture:       texture,
@@ -32,11 +36,13 @@ func NewEnemy(
 }
 
 type Enemy struct {
-	Position dsu.Vector2i
-	Texture  *sdl.Texture
-	Speed    int32
-	Index    int
-	Health   int
+	Position    dsu.Vector2i
+	Texture     *sdl.Texture
+	Speed       int32
+	Index       int
+	Health      int
+	Layer       int
+	TargetLayer int
 
 	app           *core.App
 	direction     dsu.Vector2i
@@ -65,7 +71,11 @@ func (e *Enemy) OnRender(r *sdl.Renderer) {
 	graphics.Blit(r, e.Texture, e.Position, e.scale)
 }
 
-func (e *Enemy) OnHit(collider any) {
+func (e *Enemy) OnHit(collider *core.Collider) {
+	if (*collider).GetTag() == "player" {
+		e.Free()
+		return
+	}
 	e.Health--
 	if e.Health < 1 {
 		e.Free()
@@ -79,6 +89,18 @@ func (e *Enemy) GetMetadataForCollision() (int32, int32, int32, int32) {
 	}
 
 	return e.Position.X, e.Position.Y, width * 2, height * 2
+}
+
+func (e *Enemy) GetLayer() int {
+	return e.Layer
+}
+
+func (e *Enemy) GetTargetLayer() int {
+	return e.TargetLayer
+}
+
+func (e *Enemy) GetTag() string {
+	return "enemy"
 }
 
 func (e *Enemy) Free() {
