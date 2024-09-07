@@ -48,11 +48,14 @@ type Enemy struct {
 	direction     dsu.Vector2i
 	bulletTexture *sdl.Texture
 	scale         float32
+	shouldShoot   int
 }
 
 func (e *Enemy) OnStart() {
 	e.direction.X = -1
 	e.direction.Y = int32(rand.Intn(3) - 1)
+
+	e.shouldShoot = 30
 }
 
 func (e *Enemy) OnUpdate() {
@@ -65,10 +68,20 @@ func (e *Enemy) OnUpdate() {
 		e.direction.Y *= -1
 	}
 	e.Position = newPosition
+
+	e.shouldShoot--
+	if e.shouldShoot <= 0 {
+		e.shouldShoot = 30
+		e.spawnBullet()
+	}
 }
 
 func (e *Enemy) OnRender(r *sdl.Renderer) {
-	graphics.Blit(r, e.Texture, e.Position, e.scale)
+	if e.Position.X > -150 {
+		graphics.Blit(r, e.Texture, e.Position, e.scale)
+	} else {
+		e.Free()
+	}
 }
 
 func (e *Enemy) OnHit(collider *core.Collider) {
@@ -117,4 +130,27 @@ func (e *Enemy) Free() {
 			e.app.CollisionServer.CollisionAreas = e.app.CollisionServer.CollisionAreas[:len(e.app.CollisionServer.CollisionAreas)-1]
 		}
 	}
+}
+
+func (e *Enemy) spawnBullet() {
+	_, _, width, height, err := e.Texture.Query()
+	if err != nil {
+		panic(err)
+	}
+	_, _, bulletWidth, bulletHeight, err := e.bulletTexture.Query()
+	if err != nil {
+		panic(err)
+	}
+	bulletSpawnPosition := dsu.Vector2i{
+		X: e.Position.X,
+		Y: e.Position.Y,
+	}
+	scatter := int32(rand.Intn(60+60) - 60)
+	bulletOffset := dsu.Vector2i{
+		X: (width*int32(e.scale) - 30) - bulletWidth/2,
+		Y: (height * int32(e.scale) / 2) - bulletHeight/2 + scatter,
+	}
+
+	bulletSpawnPosition = bulletSpawnPosition.Add(bulletOffset)
+	NewBullet(e.app, bulletSpawnPosition, e.bulletTexture, 7.0, dsu.Vector2i{X: -1, Y: 0}, 2, 0)
 }

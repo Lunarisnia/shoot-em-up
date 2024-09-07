@@ -146,10 +146,14 @@ func (p *Player) OnKeyUp(key *sdl.KeyboardEvent) {
 }
 
 func (p *Player) OnCollided(area *core.CollisionArea) {
-	if (*area).GetTag() == "enemy" {
+	if (*area).GetTag() == "enemy" || (*area).GetTag() == "bullet" {
 		fmt.Println("Took 1 Damage")
 		return
 	}
+}
+
+func (p *Player) OnHit(area *core.Collider) {
+	fmt.Println("Got shot for 1 damage")
 }
 
 func (p *Player) GetMetadataForCollision() (int32, int32, int32, int32) {

@@ -14,6 +14,10 @@ func initNodes(a *core.App) {
 	if err != nil {
 		panic(err)
 	}
+	bulletSprite, err := graphics.LoadTexture(a.Renderer, "assets/bullet.png")
+	if err != nil {
+		panic(err)
+	}
 	_, _, width, height, err := playerSprite.Query()
 	if err != nil {
 		panic(err)
@@ -27,7 +31,7 @@ func initNodes(a *core.App) {
 		playerSprite, 0, 2,
 	)
 
-	actors.NewEnemySpawner(a, 180, playerSprite)
+	actors.NewEnemySpawner(a, 180, playerSprite, bulletSprite)
 }
 
 func main() {

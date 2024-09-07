@@ -52,7 +52,7 @@ func (b *Bullet) OnUpdate() {
 }
 
 func (b *Bullet) OnRender(r *sdl.Renderer) {
-	if b.Position.X < core.ScreenWidth {
+	if b.Position.X < core.ScreenWidth && b.Position.X > -30 {
 		graphics.Blit(r, b.Texture, b.Position, 1.0)
 		b.Position = b.Position.Add(b.direction.MultiplyScalar(b.Speed))
 	} else {

@@ -8,10 +8,16 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func NewEnemySpawner(a *core.App, interval int, enemyTexture *sdl.Texture) *EnemySpawner {
+func NewEnemySpawner(
+	a *core.App,
+	interval int,
+	enemyTexture *sdl.Texture,
+	bulletTexture *sdl.Texture,
+) *EnemySpawner {
 	enemySpawner := EnemySpawner{
-		Interval:     interval,
-		EnemyTexture: enemyTexture,
+		Interval:      interval,
+		EnemyTexture:  enemyTexture,
+		BulletTexture: bulletTexture,
 
 		app: a,
 	}
@@ -20,8 +26,9 @@ func NewEnemySpawner(a *core.App, interval int, enemyTexture *sdl.Texture) *Enem
 }
 
 type EnemySpawner struct {
-	Interval     int
-	EnemyTexture *sdl.Texture
+	Interval      int
+	EnemyTexture  *sdl.Texture
+	BulletTexture *sdl.Texture
 
 	app   *core.App
 	timer int
@@ -43,7 +50,7 @@ func (e *EnemySpawner) OnUpdate() {
 		NewEnemy(e.app, dsu.Vector2i{
 			X: core.ScreenWidth,
 			Y: int32(rand.Intn(int(core.ScreenHeight - height*2.0))),
-		}, e.EnemyTexture, e.EnemyTexture, 5, 2, 0)
+		}, e.EnemyTexture, e.BulletTexture, 5, 2, 0)
 		e.timer = e.Interval
 		return
 	}
